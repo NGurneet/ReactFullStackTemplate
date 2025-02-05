@@ -4,6 +4,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
 import theme from '../../theme';
+import {logout} from "../../api/authRuducer"
+import { useAppDispatch } from "../../redux/store";
 
 const Navbar: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -13,6 +15,7 @@ const Navbar: React.FC = () => {
 
   // Initialize navigate from react-router-dom
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   // Navigation menu items
   const menuItems = ["Songs", "Playlists", "Admin"];
@@ -33,6 +36,8 @@ const Navbar: React.FC = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("role");
+    dispatch(logout());
+
     navigate("/"); // Redirect to the login page (or any page you'd like)
   };
 

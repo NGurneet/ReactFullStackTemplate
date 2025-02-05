@@ -128,6 +128,12 @@ export const apiSlice = createApi({
       }),
     }),
 
+    getUserData: builder.query<{
+      id: string; name: string; email: string
+      }, string>({
+      query: (id:string) => `users/${id}`,
+    }),
+
 
     uploadSong: builder.mutation<void, FormData>({
 /**
@@ -198,6 +204,7 @@ export const {
   useSignupMutation,
   useForgotMutation,
   useUpdateMutation,
+  useGetUserDataQuery,
   useUploadSongMutation,
   useFetchSongsQuery,
   useFetchSongsInAlbumQuery,

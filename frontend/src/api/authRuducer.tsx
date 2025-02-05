@@ -1,10 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {UserState} from "../redux/reducer/userReducer"
 
 interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
   role: string | null;
-  user: any;
+  id: string | null;
+  name: string | null;
+  email: string | null;
 }
 
 
@@ -12,15 +15,9 @@ const initialState: AuthState = {
   token: localStorage.getItem("authToken"),
   isAuthenticated: !!localStorage.getItem("authToken"),
   role: localStorage.getItem("role"),
-  user: (() => {
-    const user = localStorage.getItem("user");
-    try {
-      return user ? JSON.parse(user) : null;
-    } catch (error) {
-      console.error("Error parsing user data from localStorage", error);
-      return null;
-    }}
-  )
+  name: localStorage.getItem("name")||"",
+  id: localStorage.getItem("id")||"",
+  email: localStorage.getItem("email"),
   
 };
 
@@ -37,7 +34,8 @@ const authSlice = createSlice({
       state.token = action.payload;
       state.isAuthenticated = true;
       localStorage.setItem("authToken", action.payload);
-      localStorage.setItem("role", action.payload);
+
+      
     },
    
     /**
@@ -49,15 +47,38 @@ const authSlice = createSlice({
     logout: (state) => {
       state.token = null;
       state.isAuthenticated = false;
+      localStorage.removeItem("playlists");
       localStorage.removeItem("authToken");
+      localStorage.removeItem("name");
+      localStorage.removeItem("id");
+      localStorage.removeItem("role");
+      localStorage.removeItem("email");
+      localStorage.removeItem("isAuthenticated");
+      localStorage.removeItem("user");
     },
 
-    setUser: (state, action: PayloadAction<{ user: AuthState["user"] }>) => {
-      state.user = action.payload.user;
-      localStorage.setItem("user", JSON.stringify(action.payload.user));
+    // setUser: (state, action: PayloadAction<{ user: AuthState["user"] }>) => {
+    //   state.user = action.payload.user;
+    //   localStorage.setItem("user", JSON.stringify(action.payload.user));
+    // },
+    setUserData: (state, action: PayloadAction<{name: string, id: string, email:string}>) => {
+         
+      localStorage.setItem("id", action.payload.id);
+      localStorage.setItem("name", action.payload.name);
+      localStorage.setItem("email", action.payload.email);
+      
     },
+
+    // setUserData: (state, action: PayloadAction<UserState>) => {
+    //   state.user = action.payload;
+    //   localStorage.setItem("name" , action.payload.user.name);
+    // },
+    // clearUser: (state) => {
+    //   state.user = null;
+    //   localStorage.removeItem("user");  
+    // },
   },
 });
 
-export const { setToken, logout, setUser } = authSlice.actions;
+export const { setToken, logout, setUserData } = authSlice.actions;
 export default authSlice.reducer;

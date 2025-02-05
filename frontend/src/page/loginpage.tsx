@@ -5,11 +5,12 @@ import { showSuccessToast, showErrorToast, showLoadingToast } from "../utils/toa
 import FormField from "../components/FormField";
 import FormLayout from "../components/FormLayout";
 import { useLoginMutation } from "../services/apiSlice";
-import { setToken, setUser } from "../api/authRuducer";
+import { setToken, setUserData } from "../api/authRuducer";
 import theme from "../theme";
 import { useAppDispatch } from "../redux/store";
 import { Box } from "@mui/material";
 import { toast } from "react-toastify";
+import {login} from "../redux/reducer/userReducer";
 
 type FormData = {
   email: string;
@@ -56,8 +57,10 @@ const Login: React.FC = () => {
       localStorage.setItem("refreshToken", response.data?.refreshToken);
       localStorage.setItem("role", response.data?.role);
       localStorage.setItem("isAuthenticated", "true");
-      dispatch(setUser({ user: response.data?.user }));
-      console.log("User:", response.data?.user);
+      //dispatch(setUser({ user: response.data?.user }));
+      dispatch(setUserData({name:response.data?.user.name, email:response.data?.user.email, id:response.data?.user._id}))
+    //  dispatch(login({ id: response.data?.user.id, name: response.data?.user.name, email: response.data?.user.email, token: response.data?.token }));
+      console.log("User Name:", response.data?.user.name);
       // Show success toast
       
        // Dismiss loading toast
@@ -141,7 +144,7 @@ const Login: React.FC = () => {
         />
         <Link to="/forgot-password" style={{ textDecoration: "none", color: theme.palette.secondary.main, marginTop: "10px", display: "block" }}>
           Forgot Password?
-        </Link>
+        </Link>   
 
       </FormLayout>
     </div>
